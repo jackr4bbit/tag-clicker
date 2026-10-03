@@ -19,7 +19,7 @@ export function start(canvas, buttons) {
 }
 
 const cartImg = new Image();
-cartImg.src = "/cart.svg";
+cartImg.src = "cart.svg";
 
 export function frame(canvas) {
     const ctx = canvas.getContext("2d");

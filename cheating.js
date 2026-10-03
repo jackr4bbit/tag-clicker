@@ -45,7 +45,7 @@ window.enableHacks = function () {
 }
 
 const wrenchImg = new Image();
-wrenchImg.src = "/wrench.svg";
+wrenchImg.src = "wrench.svg";
 
 export function frame(canvas) {
     if (hacks) {
