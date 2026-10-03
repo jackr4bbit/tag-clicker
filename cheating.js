@@ -52,12 +52,10 @@ export function frame(canvas) {
         const ctx = canvas.getContext("2d");
 
         ctx.fillStyle = fill;
-        ctx.fillRect(x, y, width, height);
-
         ctx.strokeStyle = stroke;
         ctx.lineWidth = strokeWidth;
+        ctx.fillRect(x, y, width, height);
         ctx.strokeRect(x, y, width, height);
-
         ctx.drawImage(wrenchImg, x + imageMargins, y + imageMargins, width - (imageMargins * 2), height - (imageMargins * 2));
     }
 }

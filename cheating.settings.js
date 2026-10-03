@@ -1,1 +1,1 @@
-export {x, y, width, height, fill, stroke, strokeWidth, imageMargins} from "./cornerButtons.settings.js";
+export * from "./cornerButtons.settings.js";
