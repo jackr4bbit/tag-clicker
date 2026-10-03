@@ -1,3 +1,5 @@
+import {x, y, width, height, fill, stroke, strokeWidth, imageMargins} from "./cheating.settings.js";
+
 console.log(
     "%cDon't cheat!",
     "color: red; font-size: 50px; font-weight: bold;"
@@ -18,14 +20,14 @@ let menuOpen = false;
 let buttons = null;
 
 export function start(canvas, privateButtons) {
-    buttons = privateButtons
-    if (localStorage.getItem("hacks")) {window.enableHacks()}
+    buttons = privateButtons;
+    if (localStorage.getItem("hacks")) {console.log(window.enableHacks())}
 }
 
 window.enableHacks = function () {
     //Turn on hacks and save to persistent storage
-    hacks = true
-    localStorage.setItem("hacks", true)
+    hacks = true;
+    localStorage.setItem("hacks", true);
 
     //Add button
     buttons.push({
@@ -38,6 +40,8 @@ window.enableHacks = function () {
             menuOpen = !menuOpen;
         }
     });
+
+    return "Hacks enabled! Use the panel in the top-left corner.";
 }
 
 const wrenchImg = new Image();
@@ -47,13 +51,13 @@ export function frame(canvas) {
     if (hacks) {
         const ctx = canvas.getContext("2d");
 
-        ctx.fillStyle = "white";
-        ctx.fillRect(10, 10, 25, 25);
+        ctx.fillStyle = fill;
+        ctx.fillRect(x, y, width, height);
 
-        ctx.strokeStyle = "gray";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(10, 10, 25, 25);
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = strokeWidth;
+        ctx.strokeRect(x, y, width, height);
 
-        ctx.drawImage(wrenchImg, 12, 12, 21, 21);
+        ctx.drawImage(wrenchImg, x + imageMargins, y + imageMargins, width - (imageMargins * 2), height - (imageMargins * 2));
     }
 }

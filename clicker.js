@@ -1,24 +1,24 @@
-import {tags, min, max, hoverSize, increment, color, countSize, epcSize, rotationAmount67, increment67} from "./clicker.settings.js";
+import {min, max, hoverSize, increment, color, countSize, epcSize, rotationAmount67, increment67} from "./clicker.settings.js";
+import {tags, state} from "./shop.js";
 import {textSize} from "./utils.js";
-
-let tag = 0;
 
 let fontSize = min;
 let growing = true;
 let hover = false;
 let rotation67 = 0;
-let rotating67 = true
+let rotating67 = true;
 
 let elements = localStorage.getItem("elements") ?? 0;
 
 export function start(canvas, buttons) {
     frame(canvas, buttons);
+    let text = `<${tags[state.tag].name}>`;
     buttons.push(
         {
-            x: (canvas) => (canvas.width / 2) - (textSize(canvas, `<${tags[tag].name}>`).width / 2),
-            y: (canvas) => (canvas.height / 2) - textSize(canvas, `<${tags[tag].name}>`).height,
-            width: (canvas) => textSize(canvas, `<${tags[tag].name}>`).width,
-            height: (canvas) => textSize(canvas, `<${tags[tag].name}>`).height,
+            x: () => (canvas.width / 2) - (textSize(canvas, text).width / 2),
+            y: () => (canvas.height / 2) - textSize(canvas, text).height,
+            width: () => textSize(canvas, text).width,
+            height: () => textSize(canvas, text).height,
             hoverAction: (isMouseInside) => {
                 hover = isMouseInside;
             },
@@ -68,8 +68,8 @@ export function frame(canvas) {
     }
 
     ctx.font = `${epcSize}px Arial`;
-    ctx.fillText(`${tags[tag].epc} EpC`, canvas.width / 2, (canvas.height / 2) - (max * 1.5));
+    ctx.fillText(`${tags[state.tag].epc} EpC`, canvas.width / 2, (canvas.height / 2) - (max * 1.5));
 
     ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-    ctx.fillText(`<${tags[tag].name}>`, canvas.width / 2, canvas.height / 2);
+    ctx.fillText(`<${tags[state.tag].name}>`, canvas.width / 2, canvas.height / 2);
 }

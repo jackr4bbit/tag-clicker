@@ -1,0 +1,1 @@
+export {x, y, width, height, fill, stroke, strokeWidth, imageMargins} from "./cornerButtons.settings.js";

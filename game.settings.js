@@ -1,1 +1,1 @@
-export default ["background", "cheating", "clicker", "marquee"];
+export default ["background", "cheating", "clicker", "marquee", "shop"];

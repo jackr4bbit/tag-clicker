@@ -1,4 +1,3 @@
-export const tags = [{name: "html", epc: 1}, {name: "head", epc: 2}, {name: "title", epc: 3}, {name: "style", epc: 5}, {name: "body", epc: 10}, {name: "p", epc: 20}, {name: "div", epc: 25}]
 export let min = 35;
 export const max = 40;
 export const hoverSize = max;
