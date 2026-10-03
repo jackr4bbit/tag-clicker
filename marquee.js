@@ -5,6 +5,19 @@ let message = Math.floor(Math.random() * messages.length);
 let hue = 0;
 let xPosition = 0;
 
+export function start(canvas, buttons) {
+    buttons.push({
+        x: 0,
+        y: canvas.height - height,
+        width: canvas.width,
+        height: height,
+        hoverAction: () => {},
+        clickAction: () => {
+            window.open("https://jackhuey.com", "_blank");
+        }
+    });
+}
+
 export function frame(canvas) {
     const ctx = canvas.getContext("2d");
 
