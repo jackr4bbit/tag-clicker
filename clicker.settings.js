@@ -6,3 +6,5 @@ export const increment = .25;
 export const color = "#ffb700";
 export const countSize = 50;
 export const epcSize = 30;
+export const rotationAmount67 = 10;
+export const increment67 = increment * 2;

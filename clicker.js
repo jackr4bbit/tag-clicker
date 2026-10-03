@@ -1,4 +1,4 @@
-import {tags, min, max, hoverSize, increment, color, countSize, epcSize} from "./clicker.settings.js";
+import {tags, min, max, hoverSize, increment, color, countSize, epcSize, rotationAmount67, increment67} from "./clicker.settings.js";
 import {textSize} from "./utils.js";
 
 let tag = 0;
@@ -6,6 +6,8 @@ let tag = 0;
 let fontSize = min;
 let growing = true;
 let hover = false;
+let rotation67 = 0;
+let rotating67 = true
 
 let clicks = localStorage.getItem("clicks") ?? 0;
 
@@ -21,7 +23,7 @@ export function start(canvas, buttons) {
                 hover = isMouseInside;
             },
             clickAction: () => {
-                clicks ++;
+                clicks++;
                 localStorage.setItem("clicks", clicks);
             }
         }
@@ -47,7 +49,23 @@ export function frame(canvas) {
     ctx.textAlign = "center";
 
     ctx.font = `${countSize}px Arial`;
-    ctx.fillText(`${clicks} DOM elements`, canvas.width / 2, (canvas.height / 2) - (max * 2.5));
+    if (clicks == 67 || rotation67 !== 0) {
+        if (rotating67) {
+            rotation67 += increment67;
+            if (rotation67 > rotationAmount67) rotating67 = false;
+        } else {
+            rotation67 -= increment67;
+            if (rotation67 < -rotationAmount67) rotating67 = true;
+        }
+
+        ctx.save();
+        ctx.translate(canvas.width / 2, (canvas.height / 2) - (max * 2.5));
+        ctx.rotate((rotation67 * Math.PI) / 180);
+        ctx.fillText(`${clicks} DOM elements`, 0, 0);
+        ctx.restore();
+    } else {
+        ctx.fillText(`${clicks} DOM elements`, canvas.width / 2, (canvas.height / 2) - (max * 2.5));
+    }
 
     ctx.font = `${epcSize}px Arial`;
     ctx.fillText(`${tags[tag].epc} EpC`, canvas.width / 2, (canvas.height / 2) - (max * 1.5));
