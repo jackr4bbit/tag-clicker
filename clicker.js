@@ -16,7 +16,7 @@ export function start(canvas, buttons) {
     buttons.push(
         {
             x: (canvas) => (canvas.width / 2) - (textSize(canvas, `<${tags[tag].name}>`).width / 2),
-            y: (canvas) => (canvas.height / 2) - (textSize(canvas, `<${tags[tag].name}>`).height / 2),
+            y: (canvas) => (canvas.height / 2) - textSize(canvas, `<${tags[tag].name}>`).height,
             width: (canvas) => textSize(canvas, `<${tags[tag].name}>`).width,
             height: (canvas) => textSize(canvas, `<${tags[tag].name}>`).height,
             hoverAction: (isMouseInside) => {
