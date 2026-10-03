@@ -19,7 +19,7 @@ export function frame(canvas) {
 
     xPosition += movementIncrement;
     if (xPosition >= canvas.width) {
-        message ++;
+        message = (message + 1) % messages.length;
         xPosition = -textSize(canvas, messages[message]).width;
     }
 
