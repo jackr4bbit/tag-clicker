@@ -1,6 +1,6 @@
 export const x = 10;
 export const y = x;
-export const width = 25;
+export const width = 40;
 export const height = width;
 export const fill = "white";
 export const stroke = "gray";
