@@ -31,10 +31,10 @@ window.enableHacks = function () {
 
     //Add button
     buttons.push({
-        x: 10,
-        y: 10,
-        width: 25,
-        height: 25,
+        x: x,
+        y: y,
+        width: width,
+        height: height,
         hoverAction: () => {},
         clickAction: () => {
             menuOpen = !menuOpen;

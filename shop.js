@@ -8,9 +8,9 @@ let menuOpen = false;
 export function start(canvas, buttons) {
     buttons.push({
         x: () => canvas.width - x - width,
-        y: 10,
-        width: 25,
-        height: 25,
+        y: y,
+        width: width,
+        height: height,
         hoverAction: () => {},
         clickAction: () => {
             menuOpen = !menuOpen;
