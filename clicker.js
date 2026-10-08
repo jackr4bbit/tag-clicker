@@ -10,26 +10,26 @@ let rotating67 = true;
 
 export function start(canvas, buttons) {
     const ctx = canvas.getContext("2d");
-    buttons.push(
-        {
-            all: () => {
-                ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-                const size = textSize(canvas, `<${tags[state.tag].name}>`);
-                return {
-                    x: (canvas.width / 2) - (size.width / 2),
-                    y: (canvas.height / 2) - size.height,
-                    width: size.width,
-                    height: size.height
-                }
-            },
-            hoverAction: (isMouseInside) => {
-                hover = isMouseInside;
-            },
-            clickAction: () => {
-                state.elements += tags[state.tag].epc;
+    buttons.push({
+        all: () => {
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+            const size = textSize(canvas, `<${tags[state.tag].name}>`);
+            return {
+                x: (canvas.width / 2) - (size.width / 2),
+                y: (canvas.height / 2) - (size.height / 2),
+                width: size.width,
+                height: size.height
             }
+        },
+        hoverAction: (isMouseInside) => {
+            hover = isMouseInside;
+        },
+        clickAction: () => {
+            state.elements += tags[state.tag].epc;
         }
-    );
+    });
 }
 
 export function frame(canvas) {
@@ -49,6 +49,7 @@ export function frame(canvas) {
 
     ctx.fillStyle = color;
     ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     ctx.font = `${countSize}px Arial`;
     if (state.elements == 67 || rotation67 !== 0) {
