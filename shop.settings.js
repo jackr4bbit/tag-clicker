@@ -5,28 +5,31 @@ export const tags = [{name: "html", epc: 1, price: 0}, {name: "head", epc: 2, pr
 export const eventListeners = [
     {
         name: "mousemove",
-        description: "Moving your mouse generates more elements",
+        description: "Your scripts make more elements when you move",
         price: 150,
         run: (state, scriptStats) => {
-            let lastTime = performance.now();
             let lastX = 0;
             let lastY = 0;
 
             document.addEventListener("mousemove", (event) => {
-                const currentTime = performance.now();
                 const currentX = event.clientX;
                 const currentY = event.clientY;
 
-                const timePassed = currentTime - lastTime;
+                const distance = Math.sqrt((currentX - lastX) ** 2 + (currentY - lastY) ** 2);
 
-                if (timePassed > 0) {
-                    const distance = Math.sqrt((currentX - lastX) ** 2 + (currentY - lastY) ** 2);
-
-                    scriptStats.eps = 1 + Math.round(distance/30);
-                    lastTime = currentTime;
-                    lastX = currentX;
-                    lastY = currentY;
-                }
+                scriptStats.eps = 1 + Math.round(distance/30);
+                lastX = currentX;
+                lastY = currentY;
+            });
+        }
+    },
+    {
+        name: "wheel",
+        description: "Scrolling speeds up time for your scripts",
+        price: 300,
+        run: (state, scriptStats) => {
+            document.addEventListener("wheel", (event) => {
+                scriptStats.wait = Math.max(1000, 1000 / (event.deltaY / 60));
             });
         }
     }
