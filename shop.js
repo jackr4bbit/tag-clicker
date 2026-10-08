@@ -1,6 +1,6 @@
-import {defaultState, tags, button, menu, animIncrement, item} from "./shop.settings.js";
+import {defaultState, tags, items, button, menu, animIncrement, item} from "./shop.settings.js";
 import {height as marqueeHeight} from "./marquee.settings.js";
-import {textSize} from "./utils.js";
+import {textSize, callValue} from "./utils.js";
 
 export {tags};
 export let state =  JSON.parse(localStorage.getItem("state")) ?? defaultState;
@@ -19,22 +19,26 @@ export function start(canvas, buttons) {
         }
     });
 
-    buttons.push({
-        x: () => canvas.width - anim + menu.strokeWidth + menu.strokeWidth + item.gap,
-        y: () => button.y + button.height + menu.y + menu.strokeWidth + item.gap,
-        width: menu.width - (menu.strokeWidth + item.gap) * 2,
-        height: item.height,
-        hoverAction: (isMouseInside) => {
-            if (isMouseInside && (tags.length <= state.tag + 1 || tags.length > state.tag + 1 && state.elements < tags[state.tag + 1].price)) {
-                canvas.style.cursor = "not-allowed";
+    items.forEach((shopItem, i) => {
+        buttons.push({
+            x: () => canvas.width - anim + menu.strokeWidth + menu.strokeWidth + item.gap,
+            y: () => button.y + button.height + menu.y + menu.strokeWidth + item.gap * (i + 1) + item.height * i,
+            width: menu.width - (menu.strokeWidth + item.gap) * 2,
+            height: item.height,
+            hoverAction: (isMouseInside) => {
+                if (isMouseInside && !callValue(shopItem.buyable, [state])) {
+                    canvas.style.cursor = "not-allowed";
+                }
+            },
+            clickAction: () => {
+                if (callValue(shopItem.buyable, [state])) {
+                    shopItem.buy(state);
+                    if (!callValue(shopItem.buyable, [state])) {
+                        canvas.style.cursor = "not-allowed";
+                    }
+                }
             }
-        },
-        clickAction: () => {
-            if (tags.length > state.tag + 1 && state.elements >= tags[state.tag + 1].price) {
-                state.tag++;
-                state.elements -= tags[state.tag].price;
-            }
-        }
+        });
     });
 }
 
@@ -82,28 +86,28 @@ export function frame(canvas) {
     ctx.strokeRect(x, y, menu.width, height);
 
     //Draw items
-    ctx.strokeStyle = menu.stroke;
-    ctx.lineWidth = menu.strokeWidth;
-    ctx.strokeRect(x + menu.strokeWidth + item.gap, y + menu.strokeWidth + item.gap, menu.width - (menu.strokeWidth + item.gap) * 2, item.height);
+    items.forEach((shopItem, i) => {
+        ctx.strokeStyle = menu.stroke;
+        ctx.lineWidth = menu.strokeWidth;
+        ctx.strokeRect(x + menu.strokeWidth + item.gap, y + menu.strokeWidth + item.gap * (i + 1) + item.height * i, menu.width - (menu.strokeWidth + item.gap) * 2, item.height);
 
-    //Draw name
-    ctx.font = `bold ${item.textSize}px Arial`;
-    ctx.fillStyle = item.textColor;
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    const isMore = tags.length > state.tag + 1;
-    ctx.fillText(isMore ? "Next tag: " : "No more tags...", x + menu.strokeWidth + item.gap + 20, y + menu.strokeWidth + item.gap + item.height/2);
-    const size = textSize(canvas, "Next tag: ");
+        //Draw name
+        ctx.fillStyle = item.textColor;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        let size = {width: 0, height: 0};
+        shopItem.label.forEach(segment => {
+            const text = callValue(segment.text, [state]);
+            ctx.font = `${segment.style ?? ""} ${item.textSize}px ${segment.typeface ?? ""}`;
+            ctx.fillText(text, x + menu.strokeWidth + item.gap + 20 + size.width, y + menu.strokeWidth + ((item.gap + item.height) * (i + 1)) - item.height / 2);
+            size = textSize(canvas, text);
+        });
 
-    if (isMore) {
-        ctx.font = `normal ${item.textSize}px "JetBrains Mono", monospace`;
-        ctx.fillText(`<${tags[state.tag + 1].name}>`, x + menu.strokeWidth + item.gap + 20 + size.width, y + menu.strokeWidth + item.gap + item.height / 2);
-    }
-
-    //Draw stats
-    ctx.font = `${item.textSize * 0.75}px Arial`;
-    ctx.textBaseline = "bottom";
-    ctx.fillText(`${isMore ? tags[state.tag + 1].price : "∞"} elements`, x + menu.strokeWidth + item.gap + 20, y + menu.strokeWidth + item.gap + item.height / 2 - 20);
-    ctx.textBaseline = "top";
-    ctx.fillText(isMore ? `${tags[state.tag + 1].epc} EpC` : "More tags may come in a future update...", x + menu.strokeWidth + item.gap + 20, y + menu.strokeWidth + item.gap + item.height / 2 + 20);
+        //Draw stats
+        ctx.font = `${item.textSize * 0.75}px Arial`;
+        ctx.textBaseline = "bottom";
+        ctx.fillText(`${callValue(shopItem.price, [state])} elements`, x + menu.strokeWidth + item.gap + 20, y + menu.strokeWidth + ((item.gap + item.height) * (i + 1)) - item.height / 2 - 20);
+        ctx.textBaseline = "top";
+        ctx.fillText(callValue(shopItem.stat, [state]), x + menu.strokeWidth + item.gap + 20, y + menu.strokeWidth + ((item.gap + item.height) * (i + 1)) - item.height / 2 + 20);
+    });
 }

@@ -3,6 +3,7 @@ const canvas = document.getElementById("game");
 
 //Import modules
 import modules from "./game.settings.js";
+import {callValue} from "./utils.js";
 const importedModules = await Promise.all(modules.map(path => import(`./${path}.js`)));
 const buttons = [];
 function runAll(funcs) {
@@ -58,10 +59,10 @@ function isMouseInside(canvas, event, button) {
         width = all.width;
         height = all.height;
     } else {
-        x = typeof button.x === "function" ? button.x() : button.x;
-        y = typeof button.y === "function" ? button.y() : button.y;
-        width = typeof button.width === "function" ? button.width() : button.width;
-        height = typeof button.height === "function" ? button.height() : button.height;
+        x = callValue(button.x);
+        y = callValue(button.y);
+        width = callValue(button.width);
+        height = callValue(button.height);
     }
 
     return mouseX >= x &&
