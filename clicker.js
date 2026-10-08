@@ -8,23 +8,25 @@ let hover = false;
 let rotation67 = 0;
 let rotating67 = true;
 
-let elements = localStorage.getItem("elements") ?? 0;
-
 export function start(canvas, buttons) {
-    frame(canvas, buttons);
-    let text = `<${tags[state.tag].name}>`;
+    const ctx = canvas.getContext("2d");
     buttons.push(
         {
-            x: () => (canvas.width / 2) - (textSize(canvas, text).width / 2),
-            y: () => (canvas.height / 2) - textSize(canvas, text).height,
-            width: () => textSize(canvas, text).width,
-            height: () => textSize(canvas, text).height,
+            all: () => {
+                ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+                const size = textSize(canvas, `<${tags[state.tag].name}>`);
+                return {
+                    x: (canvas.width / 2) - (size.width / 2),
+                    y: (canvas.height / 2) - size.height,
+                    width: size.width,
+                    height: size.height
+                }
+            },
             hoverAction: (isMouseInside) => {
                 hover = isMouseInside;
             },
             clickAction: () => {
-                elements++;
-                localStorage.setItem("elements", elements);
+                state.elements += tags[state.tag].epc;
             }
         }
     );
@@ -49,7 +51,7 @@ export function frame(canvas) {
     ctx.textAlign = "center";
 
     ctx.font = `${countSize}px Arial`;
-    if (elements == 67 || rotation67 !== 0) {
+    if (state.elements == 67 || rotation67 !== 0) {
         if (rotating67) {
             rotation67 += increment67;
             if (rotation67 > rotationAmount67) rotating67 = false;
@@ -61,10 +63,10 @@ export function frame(canvas) {
         ctx.save();
         ctx.translate(canvas.width / 2, (canvas.height / 2) - (max * 2.5));
         ctx.rotate((rotation67 * Math.PI) / 180);
-        ctx.fillText(`${elements} DOM elements`, 0, 0);
+        ctx.fillText(`${state.elements} DOM elements`, 0, 0);
         ctx.restore();
     } else {
-        ctx.fillText(`${elements} DOM elements`, canvas.width / 2, (canvas.height / 2) - (max * 2.5));
+        ctx.fillText(`${state.elements} DOM elements`, canvas.width / 2, (canvas.height / 2) - (max * 2.5));
     }
 
     ctx.font = `${epcSize}px Arial`;

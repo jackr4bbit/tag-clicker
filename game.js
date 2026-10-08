@@ -46,11 +46,24 @@ function isMouseInside(canvas, event, button) {
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    const x = typeof button.x === "function" ? button.x() : button.x;
-    const y = typeof button.y === "function" ? button.y() : button.y;
-    const width = typeof button.width === "function" ? button.width() : button.width;
-    const height = typeof button.height === "function" ? button.height() : button.height;
-    
+    let x;
+    let y;
+    let width;
+    let height;
+
+    if (typeof button.all === "function") {
+        const all = button.all();
+        x = all.x;
+        y = all.y;
+        width = all.width;
+        height = all.height;
+    } else {
+        x = typeof button.x === "function" ? button.x() : button.x;
+        y = typeof button.y === "function" ? button.y() : button.y;
+        width = typeof button.width === "function" ? button.width() : button.width;
+        height = typeof button.height === "function" ? button.height() : button.height;
+    }
+
     return mouseX >= x &&
         mouseX <= x + width &&
         mouseY >= y &&
