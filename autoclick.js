@@ -1,9 +1,10 @@
+import {defaultScriptStats} from "./autoclick.settings.js";
 import {state} from "./shop.js";
 
-export let scriptStats = {eps: 1, wait: 1000};
+export let scriptStats = structuredClone(defaultScriptStats);
 
 let lastFrame = performance.now();
-let lastWait = scriptStats.wait;
+let lastStats = structuredClone(scriptStats);
 
 export function frame() {
     const currentTime = performance.now();
@@ -14,8 +15,11 @@ export function frame() {
         lastFrame = currentTime;
     }
 
-    if (scriptStats.wait === lastWait) {
-        scriptStats.wait = 1000;
-    }
-    lastWait = scriptStats.wait;
+    Object.keys(lastStats).forEach((key) => {
+        if (scriptStats[key] === lastStats[key] && lastStats[key] !== defaultScriptStats[key]) {
+            scriptStats[key] = defaultScriptStats[key];
+        }
+    });
+
+    lastStats = structuredClone(scriptStats);
 }

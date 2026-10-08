@@ -4,7 +4,7 @@ import {textSize, callValue} from "./utils.js";
 import {scriptStats} from "./autoclick.js";
 
 export {tags};
-export let state =  JSON.parse(localStorage.getItem("state")) ?? defaultState;
+export let state =  JSON.parse(localStorage.getItem("state")) ?? structuredClone(defaultState);
 
 let menuOpen = false;
 
@@ -20,16 +20,14 @@ export function start(canvas, buttons) {
         }
     });
 
-    items.forEach((shopItem, i) => {
+    items.filter(shopItem => !state.eventListeners.includes(shopItem.listener)).forEach((shopItem, i) => {
         buttons.push({
             x: () => canvas.width - anim + menu.strokeWidth + menu.strokeWidth + item.gap,
             y: () => button.y + button.height + menu.y + menu.strokeWidth + item.gap * (i + 1) + item.height * i,
             width: menu.width - (menu.strokeWidth + item.gap) * 2,
             height: item.height,
             hoverAction: (isMouseInside) => {
-                if (isMouseInside && state.eventListeners.includes(shopItem.listener)) {
-                    canvas.style.cursor = "cursor";
-                } else if (isMouseInside && !callValue(shopItem.buyable, [state])) {
+                if (isMouseInside && !callValue(shopItem.buyable, [state])) {
                     canvas.style.cursor = "not-allowed";
                 }
             },
@@ -93,11 +91,7 @@ export function frame(canvas) {
     ctx.strokeRect(x, y, menu.width, height);
 
     //Draw items
-    items.forEach((shopItem, i) => {
-        if (state.eventListeners.includes(shopItem.listener)) {
-            return;
-        }
-
+    items.filter(shopItem => !state.eventListeners.includes(shopItem.listener)).forEach((shopItem, i) => {
         ctx.strokeStyle = menu.stroke;
         ctx.lineWidth = menu.strokeWidth;
         ctx.strokeRect(x + menu.strokeWidth + item.gap, y + menu.strokeWidth + item.gap * (i + 1) + item.height * i, menu.width - (menu.strokeWidth + item.gap) * 2, item.height);
