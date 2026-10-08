@@ -1,6 +1,7 @@
-import {defaultState, tags, items, button, menu, animIncrement, item} from "./shop.settings.js";
+import {defaultState, tags, eventListeners, items, button, menu, animIncrement, item} from "./shop.settings.js";
 import {height as marqueeHeight} from "./marquee.settings.js";
 import {textSize, callValue} from "./utils.js";
+import {scriptStats} from "./autoclick.js";
 
 export {tags};
 export let state =  JSON.parse(localStorage.getItem("state")) ?? defaultState;
@@ -26,7 +27,9 @@ export function start(canvas, buttons) {
             width: menu.width - (menu.strokeWidth + item.gap) * 2,
             height: item.height,
             hoverAction: (isMouseInside) => {
-                if (isMouseInside && !callValue(shopItem.buyable, [state])) {
+                if (isMouseInside && state.eventListeners.includes(shopItem.listener)) {
+                    canvas.style.cursor = "cursor";
+                } else if (isMouseInside && !callValue(shopItem.buyable, [state])) {
                     canvas.style.cursor = "not-allowed";
                 }
             },
@@ -39,6 +42,10 @@ export function start(canvas, buttons) {
                 }
             }
         });
+    });
+
+    state.eventListeners.forEach(listener => {
+       eventListeners[listener].run(state, scriptStats);
     });
 }
 
@@ -87,6 +94,10 @@ export function frame(canvas) {
 
     //Draw items
     items.forEach((shopItem, i) => {
+        if (state.eventListeners.includes(shopItem.listener)) {
+            return;
+        }
+
         ctx.strokeStyle = menu.stroke;
         ctx.lineWidth = menu.strokeWidth;
         ctx.strokeRect(x + menu.strokeWidth + item.gap, y + menu.strokeWidth + item.gap * (i + 1) + item.height * i, menu.width - (menu.strokeWidth + item.gap) * 2, item.height);

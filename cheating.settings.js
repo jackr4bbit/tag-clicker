@@ -11,7 +11,7 @@ export const buttons = {
     "reset": (state) => {
         Object.keys(state).forEach(key => {
             if (key in defaultState) {
-                state[key] = defaultState[key];
+                state[key] = structuredClone(defaultState[key]);
             }
         });
     }

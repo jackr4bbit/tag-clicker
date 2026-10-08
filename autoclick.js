@@ -1,5 +1,7 @@
 import {state} from "./shop.js";
 
+export let scriptStats = {eps: 1};
+
 let lastFrame = performance.now();
 
 export function frame() {
@@ -7,7 +9,7 @@ export function frame() {
     const timePassed = currentTime - lastFrame;
 
     if (timePassed >= 1000 / state.scripts) {
-        state.elements++;
+        state.elements += scriptStats.eps;
         lastFrame = currentTime;
     }
 }
