@@ -4,6 +4,9 @@ A clicker game I made for [the Tagless YSWS](https://tagless.hackclub.com/) usin
 - buy `<script>`s (which click for you), and
 - upgrade those scripts with event listeners.
 
+## Try
+I’m hosting it on [jackhuey.com](https://jackhuey.com/tag-clicker).
+
 ## Setup
 Just `git clone` into your web server's path—no building necessary!
 
